@@ -5,7 +5,7 @@ services:
   # ── Intelligence API ────────────────────────────────────────────────────────
   api:
     build:
-      context: .
+      context: ./api
       dockerfile: Dockerfile.api
     container_name: store_intelligence_api
     ports:

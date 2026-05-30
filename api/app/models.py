@@ -176,4 +176,4 @@ class HealthResponse(BaseModel):
     version:       str
     uptime_seconds: float
     stores:        list[StoreHealth]
-    db_connected:  boo
+    db_connected:  bool
