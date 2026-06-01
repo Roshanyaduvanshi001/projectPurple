@@ -202,7 +202,7 @@ export default function App() {
 
   /* ── Layout ── */
   return (
-    <div className="flex h-screen overflow-hidden" style={{ fontFamily: 'var(--font-sans)' }}>
+    <div className="flex w-full h-screen overflow-hidden" style={{ fontFamily: 'var(--font-sans)' }}>
 
       {/* Sidebar */}
       <Sidebar
@@ -234,22 +234,31 @@ export default function App() {
             metrics={metrics}
           />
 
-          <FunnelChart funnelData={funnelData} />
+          {/* Conversion & Incidents Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2">
+              <FunnelChart funnelData={funnelData} />
+            </div>
+            <div className="flex flex-col">
+              <div className="flex items-center gap-2 mb-4">
+                <span className="label">Incidents</span>
+                <span className="h-px flex-1 bg-white/[0.04]" />
+              </div>
+              <AlertsPanel anomalies={anomalies} />
+            </div>
+          </div>
 
-          {/* Bottom row – alerts + console */}
+          {/* Bottom row – Console */}
           <section>
             <div className="flex items-center gap-2 mb-4">
-              <span className="label">Operations</span>
+              <span className="label">Telemetry Console</span>
               <span className="h-px flex-1 bg-white/[0.04]" />
             </div>
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-              <AlertsPanel anomalies={anomalies} />
-              <ConsolePanel
-                rawLogs={rawLogs}
-                clearLogs={clearLogs}
-                activeStore={activeStore}
-              />
-            </div>
+            <ConsolePanel
+              rawLogs={rawLogs}
+              clearLogs={clearLogs}
+              activeStore={activeStore}
+            />
           </section>
         </main>
       </div>
