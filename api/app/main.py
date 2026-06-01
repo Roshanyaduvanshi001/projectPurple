@@ -190,6 +190,26 @@ def _db_error_response(trace_id: str):
 # Routes
 # ──────────────────────────────────────────────────────────────────────────────
  
+@app.get("/")
+async def root():
+    """Root endpoint — confirms the API is alive and lists available routes."""
+    return {
+        "service": "Store Intelligence API",
+        "version": "1.0.0",
+        "status":  "ok",
+        "docs":    "/docs",
+        "routes": [
+            "GET  /health",
+            "GET  /stores/{store_id}/metrics",
+            "GET  /stores/{store_id}/funnel",
+            "GET  /stores/{store_id}/heatmap",
+            "GET  /stores/{store_id}/anomalies",
+            "POST /events/ingest",
+            "WS   /ws/live/{store_id}",
+        ],
+    }
+ 
+ 
 @app.post("/events/ingest", status_code=207)
 async def ingest(request: Request, body: IngestRequest):
     """
