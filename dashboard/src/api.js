@@ -1,7 +1,14 @@
 // src/api.js
 // Centralised API helper for the dashboard.
 // Vite injects variables prefixed with VITE_ into import.meta.env.
-const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8001";
+const getApiUrl = () => {
+  if (import.meta.env.VITE_API_URL) {
+    return import.meta.env.VITE_API_URL;
+  }
+  const hostname = window.location.hostname || "localhost";
+  return `http://${hostname}:8000`;
+};
+const BASE_URL = getApiUrl();
 
 // Placeholder for future auth token. Currently not used.
 const getAuthHeaders = () => {

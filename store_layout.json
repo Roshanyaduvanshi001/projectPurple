@@ -1,0 +1,430 @@
+{
+  "stores": [
+    {
+      "store_id": "STORE_BLR_001",
+      "name": "Bangalore Koramangala",
+      "city": "Bangalore",
+      "zones": [
+        {
+          "zone_id": "SKINCARE",
+          "label": "Skincare & Face Care",
+          "cameras": ["CAM_FLOOR_01"],
+          "polygon": [
+            [100.0, 100.0],
+            [600.0, 100.0],
+            [600.0, 900.0],
+            [100.0, 900.0]
+          ]
+        },
+        {
+          "zone_id": "HAIRCARE",
+          "label": "Hair Care & Styling",
+          "cameras": ["CAM_FLOOR_01"],
+          "polygon": [
+            [650.0, 100.0],
+            [1200.0, 100.0],
+            [1200.0, 900.0],
+            [650.0, 900.0]
+          ]
+        },
+        {
+          "zone_id": "PHARMACY",
+          "label": "Pharmacy & Wellness",
+          "cameras": ["CAM_FLOOR_01"],
+          "polygon": [
+            [1250.0, 100.0],
+            [1800.0, 100.0],
+            [1800.0, 900.0],
+            [1250.0, 900.0]
+          ]
+        },
+        {
+          "zone_id": "BODYCARE",
+          "label": "Body Care & Bath",
+          "cameras": ["CAM_FLOOR_02"],
+          "polygon": [
+            [100.0, 100.0],
+            [700.0, 100.0],
+            [700.0, 900.0],
+            [100.0, 900.0]
+          ]
+        },
+        {
+          "zone_id": "FRAGRANCE",
+          "label": "Fragrances & Deodorants",
+          "cameras": ["CAM_FLOOR_02"],
+          "polygon": [
+            [750.0, 100.0],
+            [1400.0, 100.0],
+            [1400.0, 900.0],
+            [750.0, 900.0]
+          ]
+        },
+        {
+          "zone_id": "OFFERS",
+          "label": "Offers & Promotions Aisle",
+          "cameras": ["CAM_FLOOR_02"],
+          "polygon": [
+            [1450.0, 100.0],
+            [1820.0, 100.0],
+            [1820.0, 900.0],
+            [1450.0, 900.0]
+          ]
+        },
+        {
+          "zone_id": "BILLING",
+          "label": "Billing & Checkout",
+          "cameras": ["CAM_BILLING_01"],
+          "polygon": [
+            [100.0, 100.0],
+            [1820.0, 100.0],
+            [1820.0, 980.0],
+            [100.0, 980.0]
+          ]
+        }
+      ],
+      "cameras": [
+        { "camera_id": "CAM_ENTRY_01",   "type": "entry",   "location": "Main Entrance" },
+        { "camera_id": "CAM_FLOOR_01",   "type": "floor",   "location": "Floor Zone A (Skincare/Haircare/Pharmacy)" },
+        { "camera_id": "CAM_FLOOR_02",   "type": "floor",   "location": "Floor Zone B (Bodycare/Fragrance/Offers)" },
+        { "camera_id": "CAM_BILLING_01", "type": "billing", "location": "Billing Counter" }
+      ],
+      "staff_uniform_hsv": [
+        [100, 80, 20, 130, 255, 200],
+        [0, 0, 0, 180, 30, 50]
+      ]
+    },
+    {
+      "store_id": "STORE_DEL_002",
+      "name": "Delhi Connaught Place",
+      "city": "New Delhi",
+      "zones": [
+        {
+          "zone_id": "SKINCARE",
+          "label": "Skincare & Face Care",
+          "cameras": ["CAM_FLOOR_01"],
+          "polygon": [
+            [100.0, 100.0],
+            [600.0, 100.0],
+            [600.0, 900.0],
+            [100.0, 900.0]
+          ]
+        },
+        {
+          "zone_id": "HAIRCARE",
+          "label": "Hair Care & Styling",
+          "cameras": ["CAM_FLOOR_01"],
+          "polygon": [
+            [650.0, 100.0],
+            [1200.0, 100.0],
+            [1200.0, 900.0],
+            [650.0, 900.0]
+          ]
+        },
+        {
+          "zone_id": "PHARMACY",
+          "label": "Pharmacy & Wellness",
+          "cameras": ["CAM_FLOOR_01"],
+          "polygon": [
+            [1250.0, 100.0],
+            [1800.0, 100.0],
+            [1800.0, 900.0],
+            [1250.0, 900.0]
+          ]
+        },
+        {
+          "zone_id": "BODYCARE",
+          "label": "Body Care & Bath",
+          "cameras": ["CAM_FLOOR_02"],
+          "polygon": [
+            [100.0, 100.0],
+            [850.0, 100.0],
+            [850.0, 980.0],
+            [100.0, 980.0]
+          ]
+        },
+        {
+          "zone_id": "MAKEUP",
+          "label": "Makeup & Cosmetics",
+          "cameras": ["CAM_FLOOR_02"],
+          "polygon": [
+            [900.0, 100.0],
+            [1820.0, 100.0],
+            [1820.0, 980.0],
+            [900.0, 980.0]
+          ]
+        },
+        {
+          "zone_id": "BILLING",
+          "label": "Billing & Checkout",
+          "cameras": ["CAM_BILLING_01"],
+          "polygon": [
+            [100.0, 100.0],
+            [1820.0, 100.0],
+            [1820.0, 980.0],
+            [100.0, 980.0]
+          ]
+        }
+      ],
+      "cameras": [
+        { "camera_id": "CAM_ENTRY_01",   "type": "entry",   "location": "Main Entrance" },
+        { "camera_id": "CAM_FLOOR_01",   "type": "floor",   "location": "Floor Zone A" },
+        { "camera_id": "CAM_FLOOR_02",   "type": "floor",   "location": "Floor Zone B (Bodycare/Makeup)" },
+        { "camera_id": "CAM_BILLING_01", "type": "billing", "location": "Billing Counter" }
+      ],
+      "staff_uniform_hsv": [
+        [0, 150, 100, 10, 255, 255],
+        [0, 0, 0, 180, 30, 50]
+      ]
+    },
+    {
+      "store_id": "STORE_MUM_003",
+      "name": "Mumbai Bandra West",
+      "city": "Mumbai",
+      "zones": [
+        {
+          "zone_id": "SKINCARE",
+          "label": "Skincare & Face Care",
+          "cameras": ["CAM_FLOOR_01"],
+          "polygon": [
+            [100.0, 100.0],
+            [600.0, 100.0],
+            [600.0, 900.0],
+            [100.0, 900.0]
+          ]
+        },
+        {
+          "zone_id": "HAIRCARE",
+          "label": "Hair Care & Styling",
+          "cameras": ["CAM_FLOOR_01"],
+          "polygon": [
+            [650.0, 100.0],
+            [1200.0, 100.0],
+            [1200.0, 900.0],
+            [650.0, 900.0]
+          ]
+        },
+        {
+          "zone_id": "PHARMACY",
+          "label": "Pharmacy & Wellness",
+          "cameras": ["CAM_FLOOR_01"],
+          "polygon": [
+            [1250.0, 100.0],
+            [1800.0, 100.0],
+            [1800.0, 900.0],
+            [1250.0, 900.0]
+          ]
+        },
+        {
+          "zone_id": "LUXURY",
+          "label": "Luxury & Premium Brands",
+          "cameras": ["CAM_FLOOR_02"],
+          "polygon": [
+            [100.0, 100.0],
+            [900.0, 100.0],
+            [900.0, 980.0],
+            [100.0, 980.0]
+          ]
+        },
+        {
+          "zone_id": "NATURALORGANIC",
+          "label": "Natural & Organic Products",
+          "cameras": ["CAM_FLOOR_02"],
+          "polygon": [
+            [950.0, 100.0],
+            [1820.0, 100.0],
+            [1820.0, 980.0],
+            [950.0, 980.0]
+          ]
+        },
+        {
+          "zone_id": "BILLING",
+          "label": "Billing & Checkout",
+          "cameras": ["CAM_BILLING_01"],
+          "polygon": [
+            [100.0, 100.0],
+            [1820.0, 100.0],
+            [1820.0, 980.0],
+            [100.0, 980.0]
+          ]
+        }
+      ],
+      "cameras": [
+        { "camera_id": "CAM_ENTRY_01",   "type": "entry",   "location": "Main Entrance" },
+        { "camera_id": "CAM_FLOOR_01",   "type": "floor",   "location": "Floor Zone A" },
+        { "camera_id": "CAM_FLOOR_02",   "type": "floor",   "location": "Floor Zone B (Luxury/Natural)" },
+        { "camera_id": "CAM_BILLING_01", "type": "billing", "location": "Billing Counter" }
+      ],
+      "staff_uniform_hsv": [
+        [35, 100, 100, 55, 255, 255],
+        [0, 0, 0, 180, 30, 50]
+      ]
+    },
+    {
+      "store_id": "STORE_HYD_004",
+      "name": "Hyderabad Jubilee Hills",
+      "city": "Hyderabad",
+      "zones": [
+        {
+          "zone_id": "SKINCARE",
+          "label": "Skincare & Face Care",
+          "cameras": ["CAM_FLOOR_01"],
+          "polygon": [
+            [100.0, 100.0],
+            [550.0, 100.0],
+            [550.0, 920.0],
+            [100.0, 920.0]
+          ]
+        },
+        {
+          "zone_id": "HAIRCARE",
+          "label": "Hair Care & Styling",
+          "cameras": ["CAM_FLOOR_01"],
+          "polygon": [
+            [600.0, 100.0],
+            [1150.0, 100.0],
+            [1150.0, 920.0],
+            [600.0, 920.0]
+          ]
+        },
+        {
+          "zone_id": "PHARMACY",
+          "label": "Pharmacy & Wellness",
+          "cameras": ["CAM_FLOOR_01"],
+          "polygon": [
+            [1200.0, 100.0],
+            [1820.0, 100.0],
+            [1820.0, 920.0],
+            [1200.0, 920.0]
+          ]
+        },
+        {
+          "zone_id": "BODYCARE",
+          "label": "Body Care & Bath",
+          "cameras": ["CAM_FLOOR_02"],
+          "polygon": [
+            [100.0, 100.0],
+            [800.0, 100.0],
+            [800.0, 980.0],
+            [100.0, 980.0]
+          ]
+        },
+        {
+          "zone_id": "FRAGRANCE",
+          "label": "Fragrances & Perfumes",
+          "cameras": ["CAM_FLOOR_02"],
+          "polygon": [
+            [850.0, 100.0],
+            [1820.0, 100.0],
+            [1820.0, 980.0],
+            [850.0, 980.0]
+          ]
+        },
+        {
+          "zone_id": "BILLING",
+          "label": "Billing & Checkout",
+          "cameras": ["CAM_BILLING_01"],
+          "polygon": [
+            [100.0, 100.0],
+            [1820.0, 100.0],
+            [1820.0, 980.0],
+            [100.0, 980.0]
+          ]
+        }
+      ],
+      "cameras": [
+        { "camera_id": "CAM_ENTRY_01",   "type": "entry",   "location": "Main Entrance" },
+        { "camera_id": "CAM_FLOOR_01",   "type": "floor",   "location": "Floor Zone A" },
+        { "camera_id": "CAM_FLOOR_02",   "type": "floor",   "location": "Floor Zone B (Bodycare/Fragrance)" },
+        { "camera_id": "CAM_BILLING_01", "type": "billing", "location": "Billing Counter" }
+      ],
+      "staff_uniform_hsv": [
+        [100, 80, 20, 130, 255, 200],
+        [0, 0, 0, 180, 30, 50]
+      ]
+    },
+    {
+      "store_id": "STORE_CHN_005",
+      "name": "Chennai T. Nagar",
+      "city": "Chennai",
+      "zones": [
+        {
+          "zone_id": "SKINCARE",
+          "label": "Skincare & Face Care",
+          "cameras": ["CAM_FLOOR_01"],
+          "polygon": [
+            [100.0, 100.0],
+            [620.0, 100.0],
+            [620.0, 900.0],
+            [100.0, 900.0]
+          ]
+        },
+        {
+          "zone_id": "HAIRCARE",
+          "label": "Hair Care & Styling",
+          "cameras": ["CAM_FLOOR_01"],
+          "polygon": [
+            [670.0, 100.0],
+            [1250.0, 100.0],
+            [1250.0, 900.0],
+            [670.0, 900.0]
+          ]
+        },
+        {
+          "zone_id": "PHARMACY",
+          "label": "Pharmacy & Wellness",
+          "cameras": ["CAM_FLOOR_01"],
+          "polygon": [
+            [1300.0, 100.0],
+            [1820.0, 100.0],
+            [1820.0, 900.0],
+            [1300.0, 900.0]
+          ]
+        },
+        {
+          "zone_id": "BABYCARE",
+          "label": "Baby Care & Kids",
+          "cameras": ["CAM_FLOOR_02"],
+          "polygon": [
+            [100.0, 100.0],
+            [750.0, 100.0],
+            [750.0, 980.0],
+            [100.0, 980.0]
+          ]
+        },
+        {
+          "zone_id": "MENGROOMING",
+          "label": "Men's Grooming",
+          "cameras": ["CAM_FLOOR_02"],
+          "polygon": [
+            [800.0, 100.0],
+            [1820.0, 100.0],
+            [1820.0, 980.0],
+            [800.0, 980.0]
+          ]
+        },
+        {
+          "zone_id": "BILLING",
+          "label": "Billing & Checkout",
+          "cameras": ["CAM_BILLING_01"],
+          "polygon": [
+            [100.0, 100.0],
+            [1820.0, 100.0],
+            [1820.0, 980.0],
+            [100.0, 980.0]
+          ]
+        }
+      ],
+      "cameras": [
+        { "camera_id": "CAM_ENTRY_01",   "type": "entry",   "location": "Main Entrance" },
+        { "camera_id": "CAM_FLOOR_01",   "type": "floor",   "location": "Floor Zone A" },
+        { "camera_id": "CAM_FLOOR_02",   "type": "floor",   "location": "Floor Zone B (Baby/Men's)" },
+        { "camera_id": "CAM_BILLING_01", "type": "billing", "location": "Billing Counter" }
+      ],
+      "staff_uniform_hsv": [
+        [15, 120, 100, 30, 255, 255],
+        [0, 0, 0, 180, 30, 50]
+      ]
+    }
+  ]
+}
