@@ -115,12 +115,14 @@ export default function App() {
 
   const pollOnce = async () => {
     try {
-      const [rm, ra] = await Promise.all([
-        fetch(`http://${host()}:8000/stores/${activeStore}/metrics`),
-        fetch(`http://${host()}:8000/stores/${activeStore}/anomalies`),
+      const [metricsRes, anomaliesRes] = await Promise.all([
+        request('GET', `/stores/${activeStore}/metrics`),
+        request('GET', `/stores/${activeStore}/anomalies`),
       ]);
-      if (rm.ok) { const d = await rm.json(); setMetrics(d); setLastUpdate(new Date()); addLog('POLLING', `Metrics polled · visitors: ${d.unique_visitors}`); }
-      if (ra.ok) { const d = await ra.json(); setAnomalies(d.anomalies || []); }
+      setMetrics(metricsRes);
+      setAnomalies(anomaliesRes.anomalies || []);
+      setLastUpdate(new Date());
+      addLog('POLLING', `Metrics polled · visitors: ${metricsRes.unique_visitors}`);
       fetchStaticData();
     } catch {
       setWsStatus('disconnected');
@@ -130,20 +132,21 @@ export default function App() {
   /* ── Static data (funnel + heatmap) ── */
   const fetchStaticData = async () => {
     try {
-      const [rf, rh] = await Promise.all([
-        fetch(`http://${host()}:8000/stores/${activeStore}/funnel`),
-        fetch(`http://${host()}:8000/stores/${activeStore}/heatmap`),
+      const [funnelRes, heatmapRes] = await Promise.all([
+        request('GET', `/stores/${activeStore}/funnel`),
+        request('GET', `/stores/${activeStore}/heatmap`),
       ]);
-      if (rf.ok) { const d = await rf.json(); setFunnelData(d.stages || []); }
-      if (rh.ok) { const d = await rh.json(); setHeatmapData(d.zones || []); }
+      if (funnelRes) setFunnelData(funnelRes.stages || []);
+      if (heatmapRes) setHeatmapData(heatmapRes.zones || []);
     } catch { /* silent */ }
   };
 
   /* ── Health ── */
   const fetchHealthData = async () => {
     try {
-      const r = await fetch(`http://${host()}:8000/health`);
-      if (r.ok) setHealth(await r.json());
+      const healthRes = await request('GET', '/health');
+      if (healthRes) setHealth(healthRes);
+
     } catch { /* silent */ }
   };
 
@@ -178,13 +181,9 @@ export default function App() {
 
     addLog('SANDBOX', `→ ${eventType} for ${visitorId}`);
     try {
-      const res = await fetch(`http://${host()}:8000/events/ingest`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ events: [event] }),
-      });
-      if (res.ok) { addLog('SANDBOX_RES', `${eventType} accepted ✓`); pollOnce(); }
-      else { addLog('SANDBOX_ERR', `Rejected: HTTP ${res.status}`); }
+      const ingestRes = await request('POST', '/events/ingest', { events: [event] });
+      if (ingestRes) { addLog('SANDBOX_RES', `${eventType} accepted ✓`); pollOnce(); }
+      else { addLog('SANDBOX_ERR', `Rejected: HTTP ${ingestRes?.status || 'unknown'}`); }
     } catch {
       addLog('SANDBOX_ERR', 'Ingestion endpoint unreachable');
     }
