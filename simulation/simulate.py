@@ -290,7 +290,8 @@ def main():
     parser.add_argument("--api-url", default="http://localhost:8000", help="FastAPI Base URL")
     parser.add_argument("--file", help="Path to a JSONL file to replay")
     parser.add_argument("--speed", type=float, default=1.0, help="Simulation speed multiplier")
-    parser.add_argument("--store", default="STORE_BLR_001", help="Store ID to simulate/filter")
+    parser.add_argument("--store", default="STORE_BLR_001", help="Deprecated single store ID (use --stores)")
+    parser.add_argument("--stores", nargs='+', help="One or more store IDs to simulate")
     parser.add_argument("--batch-size", type=int, default=1, help="Ingest batch size")
     
     args = parser.parse_args()
@@ -362,27 +363,36 @@ def main():
     # ── Option B: Continuous live synthetic stream ───────────────────────────
     else:
         print_info("No input file specified. Initiating continuous synthetic live stream...")
-        gen = EventGenerator(store_id=args.store)
+        # Determine list of store IDs
+        store_ids = args.stores if args.stores else [args.store]
+        # Create a generator per store
+        generators = {store_id: EventGenerator(store_id=store_id) for store_id in store_ids}
+        # Simple round-robin over generators
+        gen_cycle = list(generators.values())
+        gen_index = 0
         
         batch = []
         while True:
             try:
+                # Cycle through generators
+                gen = gen_cycle[gen_index % len(gen_cycle)]
+                gen_index += 1
                 ev = gen.next_event()
-                # Print visual logging indicator
+                # Print visual logging indicator with store ID
                 zone_str = f"({ev['zone_id']})" if ev.get('zone_id') else ""
                 staff_str = " [STAFF]" if ev.get('is_staff') else ""
-                print(f"\033[90m[{datetime.now().strftime('%H:%M:%S')}]\033[0m Replaying: {ev['event_type']:<20} | Visitor: {ev['visitor_id']:<12} {zone_str:<12} {staff_str}")
-                
+                print(f"\033[90m[{datetime.now().strftime('%H:%M:%S')}]\033[0m [Store {ev['store_id']}] Replaying: {ev['event_type']:<20} | Visitor: {ev['visitor_id']:<12} {zone_str:<12} {staff_str}")
+
                 batch.append(ev)
-                
+
                 if len(batch) >= args.batch_size:
                     post_batch(args.api_url, batch)
                     batch = []
-                
+
                 # Sleep between events
                 sleep_time = random.uniform(1.5, 4.0) / args.speed
                 time.sleep(sleep_time)
-                
+
             except KeyboardInterrupt:
                 print_warning("Simulation stopped by user. Exiting.")
                 break

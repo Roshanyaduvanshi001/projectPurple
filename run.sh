@@ -34,22 +34,34 @@ warn()    { echo -e "${YELLOW}⚠${RESET}  $*"; }
 error()   { echo -e "${RED}✗ ERROR:${RESET} $*"; exit 1; }
 header()  { echo -e "\n${BOLD}${CYAN}═══ $* ═══${RESET}\n"; }
 
-# ── Dependency checks ─────────────────────────────────────────────────────────
-check_docker()  { command -v docker  &>/dev/null || error "Docker not found. Install from https://docker.com"; }
-check_python()  {
-    command -v python3 &>/dev/null && return
-    command -v python  &>/dev/null && return
-    command -v py      &>/dev/null && return
-    error "Python 3 not found. Install from https://python.org"
+# Resolve and verify the correct python binary
+is_python_valid() {
+    local cmd="$1"
+    if command -v "$cmd" &>/dev/null; then
+        # Run a quick check to ensure it's not the broken Microsoft Store shim
+        if "$cmd" -c "import sys" &>/dev/null; then
+            return 0
+        fi
+    fi
+    return 1
 }
+
+check_python()  {
+    if is_python_valid python3; then return; fi
+    if is_python_valid python; then return; fi
+    if is_python_valid py; then return; fi
+    error "Python 3 not found or not working. Install from https://python.org"
+}
+
+check_docker()  { command -v docker  &>/dev/null || error "Docker not found. Install from https://docker.com"; }
 check_node()    { command -v node &>/dev/null || error "Node.js not found. Install from https://nodejs.org"; }
 check_npm()     { command -v npm  &>/dev/null || error "npm not found. Install Node.js from https://nodejs.org"; }
 
-# Resolve the correct python binary
 PYTHON() {
-    if command -v python3 &>/dev/null; then python3 "$@"
-    elif command -v python &>/dev/null; then python "$@"
-    else py "$@"; fi
+    if is_python_valid python3; then python3 "$@"
+    elif is_python_valid python; then python "$@"
+    elif is_python_valid py; then py "$@"
+    else error "No working Python binary found."; fi
 }
 
 # Activate venv cross-platform (Windows Git Bash uses Scripts/, Unix uses bin/)
@@ -124,7 +136,7 @@ run_api() {
     # Activate (cross-platform)
     venv_activate .venv
     log "Installing API dependencies..."
-    pip install -q --upgrade pip
+    python -m pip install -q --upgrade pip
     pip install -q -r requirements.txt
 
     # Set env vars
@@ -140,8 +152,7 @@ run_api() {
     uvicorn app.main:app \
         --host 0.0.0.0 \
         --port 8000 \
-        --reload \
-        --log-config /dev/null
+        --reload
 }
 
 # =============================================================================
@@ -185,7 +196,7 @@ run_pipeline() {
 
     venv_activate .venv
     log "Installing pipeline dependencies (this may take a while — ultralytics + torch)..."
-    pip install -q --upgrade pip
+    python -m pip install -q --upgrade pip
     pip install -q -r requirements.txt
 
     # Check clips exist
@@ -243,7 +254,7 @@ run_simulate() {
     fi
 
     venv_activate .venv
-    pip install -q --upgrade pip
+    python -m pip install -q --upgrade pip
     pip install -q httpx pydantic
 
     log "Simulating events for all 5 stores → http://localhost:8000 ..."

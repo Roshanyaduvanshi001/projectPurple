@@ -329,6 +329,30 @@ Swagger UI available at: `http://localhost:8000/docs`
 
 ---
 
+## 🧪 API Verification Walkthrough
+
+We verified all core endpoints of the Store Intelligence API using a browser agent navigating the live Swagger interactive UI at http://localhost:8000/docs.
+
+### Verification Results
+
+| Endpoint | Method | Parameters Tested | Expected Status | Actual Status | Response Snippet |
+|---|---|---|---|---|---|
+| `/health` | GET | None | `200 OK` | `200 OK` | `{"status": "ok", "version": "1.0.0"}` |
+| `/stores/{store_id}/metrics` | GET | `store_id = STORE_BLR_001` | `200 OK` | `200 OK` | `{"store_id": "STORE_BLR_001", "unique_visitors": 7, "conversion_rate": 0}` |
+| `/stores/{store_id}/funnel` | GET | `store_id = STORE_BLR_001` | `200 OK` | `200 OK` | `{"store_id": "STORE_BLR_001", "stages": [{"stage": "Entry", "count": 20}, ...]}` |
+| `/stores/{store_id}/heatmap` | GET | `store_id = STORE_BLR_001` | `200 OK` | `200 OK` | `{"store_id": "STORE_BLR_001", "zones": [...]}` |
+| `/stores/{store_id}/anomalies` | GET | `store_id = STORE_BLR_001` | `200 OK` | `200 OK` | `{"store_id": "STORE_BLR_001", "anomalies": [...]}` |
+
+All tested endpoints are operational and returned successful responses.
+
+### Video Recording of Verification
+
+Below is a recording showing the browser subagent expanding the endpoints, entering parameters, and executing requests:
+
+![API Docs Verification Video](file:///C:/Users/rosha/.gemini/antigravity-ide/brain/952eac7c-a105-4f34-9b87-019031404095/check_api_docs_1780503709393.webp)
+
+---
+
 ## 🚀 Setup & Running
 
 ### Prerequisites
