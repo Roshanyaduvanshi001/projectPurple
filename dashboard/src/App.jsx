@@ -62,7 +62,16 @@ export default function App() {
     addLog('SYSTEM', 'Log buffer cleared by administrator.');
   };
 
-  const host = () => window.location.hostname;
+  const getWsUrl = () => {
+    if (import.meta.env.VITE_WS_URL) {
+      return import.meta.env.VITE_WS_URL;
+    }
+    if (import.meta.env.VITE_API_URL) {
+      return import.meta.env.VITE_API_URL.replace(/^http/, 'ws');
+    }
+    const hostname = window.location.hostname || "localhost";
+    return `ws://${hostname}:8000`;
+  };
 
   /* ── Cleanup ── */
   const cleanupConnections = () => {
@@ -75,7 +84,8 @@ export default function App() {
   const connectWebSocket = () => {
     cleanupConnections();
     setWsStatus('connecting');
-    const ws = new WebSocket(`ws://${host()}:8000/ws/live/${activeStore}`);
+    const wsBase = getWsUrl().replace(/\/$/, '');
+    const ws = new WebSocket(`${wsBase}/ws/live/${activeStore}`);
     wsRef.current = ws;
 
     ws.onopen = () => {
