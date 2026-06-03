@@ -62,6 +62,88 @@ export default function App() {
     addLog('SYSTEM', 'Log buffer cleared by administrator.');
   };
 
+  const loadDummyData = (storeId) => {
+    let hash = 0;
+    for (let i = 0; i < storeId.length; i++) {
+      hash = storeId.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    const seed = Math.abs(hash);
+    
+    const visitors = 100 + (seed % 180);
+    const browseCount = Math.round(visitors * (0.80 + (seed % 10) / 100));
+    const queueCount = Math.round(browseCount * (0.65 + (seed % 15) / 100));
+    const purchaseCount = Math.round(queueCount * (0.82 + (seed % 10) / 100));
+    
+    const conversion = parseFloat((purchaseCount / visitors).toFixed(4));
+    const abandonment = parseFloat(((queueCount - purchaseCount) / queueCount).toFixed(4));
+    const avgBasket = 1400 + (seed % 1600);
+    const queueDepth = Math.max(0, seed % 4);
+    
+    const dummyMetrics = {
+      store_id: storeId,
+      window_start: new Date(Date.now() - 3600000).toISOString(),
+      window_end: new Date().toISOString(),
+      unique_visitors: visitors,
+      conversion_rate: conversion,
+      avg_basket_inr: avgBasket,
+      queue_depth_now: queueDepth,
+      abandonment_rate: abandonment,
+      zone_dwell: [
+        { zone_id: "SKINCARE", avg_dwell_ms: 110000 + (seed % 90000), visit_count: Math.round(browseCount * 0.45) },
+        { zone_id: "HAIRCARE", avg_dwell_ms: 95000 + (seed % 75000), visit_count: Math.round(browseCount * 0.35) },
+        { zone_id: "PHARMACY", avg_dwell_ms: 70000 + (seed % 50000), visit_count: Math.round(browseCount * 0.20) },
+        { zone_id: "BILLING", avg_dwell_ms: 160000 + (seed % 80000), visit_count: queueCount }
+      ]
+    };
+
+    const dummyFunnel = [
+      { stage: "Entry", count: visitors, drop_pct: 0.0 },
+      { stage: "Browse Zones", count: browseCount, drop_pct: parseFloat(((visitors - browseCount) / visitors * 100).toFixed(1)) },
+      { stage: "Billing Queue", count: queueCount, drop_pct: parseFloat(((browseCount - queueCount) / browseCount * 100).toFixed(1)) },
+      { stage: "Purchase Completed", count: purchaseCount, drop_pct: parseFloat(((queueCount - purchaseCount) / queueCount * 100).toFixed(1)) }
+    ];
+
+    const dummyHeatmap = [
+      { zone_id: "ENTRY", visit_count: visitors, avg_dwell_ms: 8000 + (seed % 6000), normalised_score: 100, data_confidence: true },
+      { zone_id: "SKINCARE", visit_count: Math.round(browseCount * 0.45), avg_dwell_ms: 110000 + (seed % 90000), normalised_score: 75, data_confidence: true },
+      { zone_id: "HAIRCARE", visit_count: Math.round(browseCount * 0.35), avg_dwell_ms: 95000 + (seed % 75000), normalised_score: 60, data_confidence: true },
+      { zone_id: "PHARMACY", visit_count: Math.round(browseCount * 0.20), avg_dwell_ms: 70000 + (seed % 50000), normalised_score: 40, data_confidence: true },
+      { zone_id: "BILLING", visit_count: queueCount, avg_dwell_ms: 160000 + (seed % 80000), normalised_score: 85, data_confidence: true }
+    ];
+
+    const dummyAnomalies = (seed % 2 === 0) ? [
+      {
+        anomaly_id: `dummy_anom_${seed % 100}`,
+        anomaly_type: "BILLING_QUEUE_SPIKE",
+        severity: "WARN",
+        detected_at: new Date(Date.now() - 300000).toISOString(),
+        description: `Checkout queue depth exceeded threshold in ${storeId}.`,
+        suggested_action: "Open an additional billing register to handle high traffic volume."
+      }
+    ] : [];
+
+    setMetrics(dummyMetrics);
+    setFunnelData(dummyFunnel);
+    setHeatmapData(dummyHeatmap);
+    setAnomalies(dummyAnomalies);
+  };
+
+  const loadDummyHealth = () => {
+    setHealth({
+      status: 'degraded',
+      version: '1.0.0 (offline)',
+      uptime_seconds: 3600,
+      db_connected: false,
+      stores: STORES.map(s => ({
+        store_id: s.id,
+        last_event_at: new Date().toISOString(),
+        lag_seconds: 0,
+        stale_feed: false,
+        event_count_24h: 300 + (s.id.charCodeAt(6) * 15)
+      }))
+    });
+  };
+
   const getWsUrl = () => {
     if (import.meta.env.VITE_WS_URL) {
       return import.meta.env.VITE_WS_URL;
@@ -136,6 +218,7 @@ export default function App() {
       fetchStaticData();
     } catch {
       setWsStatus('disconnected');
+      loadDummyData(activeStore);
     }
   };
 
@@ -148,7 +231,9 @@ export default function App() {
       ]);
       if (funnelRes) setFunnelData(funnelRes.stages || []);
       if (heatmapRes) setHeatmapData(heatmapRes.zones || []);
-    } catch { /* silent */ }
+    } catch {
+      loadDummyData(activeStore);
+    }
   };
 
   /* ── Health ── */
@@ -156,8 +241,9 @@ export default function App() {
     try {
       const healthRes = await request('GET', '/health');
       if (healthRes) setHealth(healthRes);
-
-    } catch { /* silent */ }
+    } catch {
+      loadDummyHealth();
+    }
   };
 
   /* ── Event Injection ── */
@@ -195,7 +281,35 @@ export default function App() {
       if (ingestRes) { addLog('SANDBOX_RES', `${eventType} accepted ✓`); pollOnce(); }
       else { addLog('SANDBOX_ERR', `Rejected: HTTP ${ingestRes?.status || 'unknown'}`); }
     } catch {
-      addLog('SANDBOX_ERR', 'Ingestion endpoint unreachable');
+      addLog('SANDBOX_ERR', 'Ingestion endpoint unreachable (offline mode)');
+      setMetrics(prev => {
+        const next = { ...prev };
+        if (eventType === 'ENTRY') {
+          next.unique_visitors += 1;
+        } else if (eventType === 'BILLING_QUEUE_JOIN') {
+          next.queue_depth_now += 1;
+        } else if (eventType === 'EXIT' || eventType === 'BILLING_QUEUE_ABANDON') {
+          if (next.queue_depth_now > 0) next.queue_depth_now -= 1;
+        } else if (eventType === 'ZONE_ENTER') {
+          const zoneId = customParams.zone_id || 'SKINCARE';
+          next.zone_dwell = next.zone_dwell.map(z => 
+            z.zone_id === zoneId ? { ...z, visit_count: z.visit_count + 1 } : z
+          );
+        }
+        return next;
+      });
+      setHeatmapData(prev => prev.map(z => {
+        if (eventType === 'ZONE_ENTER' && z.zone_id === (customParams.zone_id || 'SKINCARE')) {
+          return { ...z, visit_count: z.visit_count + 1 };
+        }
+        if ((eventType === 'ENTRY' || eventType === 'REENTRY') && z.zone_id === 'ENTRY') {
+          return { ...z, visit_count: z.visit_count + 1 };
+        }
+        if (eventType === 'BILLING_QUEUE_JOIN' && z.zone_id === 'BILLING') {
+          return { ...z, visit_count: z.visit_count + 1 };
+        }
+        return z;
+      }));
     }
   };
 

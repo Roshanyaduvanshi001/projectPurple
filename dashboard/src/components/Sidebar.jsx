@@ -5,6 +5,8 @@ const STORES = [
   { id: 'STORE_BLR_001', name: 'Bengaluru Flagship', city: 'Bangalore', location: 'Indiranagar' },
   { id: 'STORE_DEL_002', name: 'Delhi NCR Hub',      city: 'New Delhi',  location: 'Connaught Place' },
   { id: 'STORE_MUM_003', name: 'Mumbai Retail Arena', city: 'Mumbai',    location: 'Colaba' },
+  { id: 'STORE_HYD_004', name: 'Hyderabad Innovation', city: 'Hyderabad', location: 'Gachibowli' },
+  { id: 'STORE_CHN_005', name: 'Chennai Coastline',   city: 'Chennai',   location: 'Nungambakkam' },
 ];
 
 export { STORES };
