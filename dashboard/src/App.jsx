@@ -44,6 +44,11 @@ export default function App() {
     return () => clearInterval(t);
   }, []);
 
+  /* ── Pre-seed dummy data on mount so zone details are never empty ── */
+  useEffect(() => {
+    loadDummyData(STORES[0].id);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   /* ── Store Switch ── */
   useEffect(() => {
     connectWebSocket();
@@ -104,11 +109,11 @@ export default function App() {
     ];
 
     const dummyHeatmap = [
-      { zone_id: "ENTRY", visit_count: visitors, avg_dwell_ms: 8000 + (seed % 6000), normalised_score: 100, data_confidence: true },
-      { zone_id: "SKINCARE", visit_count: Math.round(browseCount * 0.45), avg_dwell_ms: 110000 + (seed % 90000), normalised_score: 75, data_confidence: true },
-      { zone_id: "HAIRCARE", visit_count: Math.round(browseCount * 0.35), avg_dwell_ms: 95000 + (seed % 75000), normalised_score: 60, data_confidence: true },
-      { zone_id: "PHARMACY", visit_count: Math.round(browseCount * 0.20), avg_dwell_ms: 70000 + (seed % 50000), normalised_score: 40, data_confidence: true },
-      { zone_id: "BILLING", visit_count: queueCount, avg_dwell_ms: 160000 + (seed % 80000), normalised_score: 85, data_confidence: true }
+      { zone_id: "ENTRY",    visit_count: visitors,                         avg_dwell_ms: 8000   + (seed % 6000),  normalised_score: 100, data_confidence: true, max_occupancy: 4  + (seed % 6) },
+      { zone_id: "SKINCARE", visit_count: Math.round(browseCount * 0.45),   avg_dwell_ms: 110000 + (seed % 90000), normalised_score: 75,  data_confidence: true, max_occupancy: 8  + (seed % 7) },
+      { zone_id: "HAIRCARE", visit_count: Math.round(browseCount * 0.35),   avg_dwell_ms: 95000  + (seed % 75000), normalised_score: 60,  data_confidence: true, max_occupancy: 6  + (seed % 5) },
+      { zone_id: "PHARMACY", visit_count: Math.round(browseCount * 0.20),   avg_dwell_ms: 70000  + (seed % 50000), normalised_score: 40,  data_confidence: true, max_occupancy: 3  + (seed % 4) },
+      { zone_id: "BILLING",  visit_count: queueCount,                       avg_dwell_ms: 160000 + (seed % 80000), normalised_score: 85,  data_confidence: true, max_occupancy: 12 + (seed % 8) },
     ];
 
     const dummyAnomalies = (seed % 2 === 0) ? [
